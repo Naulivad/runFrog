@@ -1,0 +1,375 @@
+// =====================================================================
+// sprites.js
+// Os desenhos do jogo (sapo, espinhos, portal, mosca, moeda e parede).
+// Foram tirados das imagens de pixel art que você mandou: cada letra é
+// um pixel, e o ponto "." é transparente. As cores ficam em CORES_IMG.
+//
+// Os desenhos com animação têm vários quadros (ex.: mosca com asas abertas
+// e fechadas) e o main.js troca de quadro para animar.
+// =====================================================================
+
+const CORES_IMG = {
+    a: "#22b14c",
+    b: "#299448",
+    c: "#ffffff",
+    d: "#000000",
+    e: "#a8e61d",
+    f: "#fff200",
+    g: "#d3f9bc",
+    h: "#ed1c24",
+    i: "#990030",
+    k: "#4d6df3",
+    l: "#99d9ea",
+    m: "#ffc20e",
+    n: "#c9445b",
+    o: "#ffa3b1",
+    H: "#6a6165",
+    I: "#8a7d7e",
+    J: "#a89996",
+    K: "#ded4d0",
+    L: "#585055",
+    M: "#2c282d",
+    N: "#403b41",
+    O: "#085e12",
+    P: "#9a5a0a",
+    Q: "#27d63d",
+    R: "#ffb52e",
+    S: "#a8e61c",
+    T: "#ffe27a",
+    U: "#026d12",
+    V: "#b06a0c",
+    W: "#f6c80e",
+    X: "#fff4c2",
+    Y: "#fcda07",
+    Z: "#edde17",
+    0: "#22d439",
+};
+
+const IMAGENS = {
+    // sapo andando normal (também usado ao deslizar e ao pegar item)
+    sapo_idle: [
+        ".......................",
+        ".......................",
+        ".......................",
+        ".......................",
+        "......aaaaa...aaaaa....",
+        "......bcdda...bcdda....",
+        "......bcdca...bcdca....",
+        "......bbbbbbbbbbbba....",
+        "......bebeeeeeebeba....",
+        "......beabbbbbbeeba....",
+        "......beeeeeeeeaeba....",
+        "......beeeeeeeeeeba....",
+        "......beeecccceeaba....",
+        "......baeecccceeeba....",
+        "......beeeeeeeeeeba....",
+        "......bbbbbbbbbbbba....",
+        ".....bbbbbb...bbbbaa..."
+    ],
+    // sapo batendo na parede (com estrelinhas)
+    sapo_hit: [
+        ".......................",
+        "........f.......f.f....",
+        "....f.f...f...f........",
+        "..................f.f..",
+        ".....faaaaa...aaaaa....",
+        "......bbdaa...bbdaaf...",
+        "......bddda...bddda....",
+        "......bbbbbbbbbbbba....",
+        "......beeeeeeeeeeba....",
+        "......beabbeebbeeba....",
+        "......beeeebbeeaeba....",
+        "......beeeeeeeeeeba....",
+        "......beeecccceeaba....",
+        "......baeecccceeeba....",
+        "......beeeeeeeeeeba....",
+        "......bbbbbbbbbbbba....",
+        ".....bbbbb....bbbbaa..."
+    ],
+    // sapo passando de fase (olhos de estrela e brilhos)
+    sapo_win: [
+        "...................f...",
+        "..................fff..",
+        ".f.................f...",
+        "fff..................f.",
+        ".f.f..aaaaa...aaaaa.fff",
+        "..fff.b.f.a...b.f.a..f.",
+        "...f..bfffa...bfffa....",
+        "......b.f.a...b.f.a....",
+        "......bbbbbbbbbbbba....",
+        "......bebeeeeeebeba....",
+        "......begbbbbbbeeba....",
+        "......beeehhhheeeba....",
+        "......beeecccceeaba....",
+        "......baeecccceegba....",
+        "......bgeeeeeeeeeba....",
+        "......bbbbbbbbbbbba....",
+        ".....bbbbbb...bbbbaa..."
+    ],
+    // sapo morto (espinho ou ácido)
+    sapo_dead: [
+        ".......................",
+        ".......................",
+        ".......................",
+        ".......................",
+        "......aaaaa...aaaaa....",
+        "......bicia...bicia....",
+        "......bcica...bcica....",
+        "......bicia...bicia....",
+        "......bbbbbbbbbbbba....",
+        "......bebeeeeeeebea....",
+        "......begbbbbbbbeea....",
+        "......beeeeeehheeea....",
+        "......beeeeeehheeaa....",
+        "......baeeeggggeega....",
+        "......bgeeeggggeeea....",
+        "......bbbbbbbbbbbba....",
+        ".....bbbbbb...bbbbaa..."
+    ],
+    // três espinhos de metal (perigo: quem encosta morre)
+    espinhos: [
+        "....H........H........H......",
+        "....I........I........I......",
+        "...JKJ......JKI......JKI.....",
+        "...JKJ......JKJ......JKI.....",
+        "...JKJ......JKI......JKI.....",
+        "..LKIKH....HKJKH....HKJKH....",
+        "..HIIKH....HJJKH....HJIKI....",
+        ".MJHIJJL..MJHIJJL..MIHIJJL...",
+        ".LHMIIJL..LINIIJL..LINIIJL...",
+        ".LHMHIJL..LIMHJIN..LHMHIIL...",
+        "HKMMNLNNN.MMMNLMMMMJMNLNMHJ..",
+        "HIJNMMNHINKJHMLJKIHHHMMHJKHN.",
+        "NHLMLIHNNINNNHMNLILNNHLMHNNN.",
+        "NNNMNLNNNNNNNNMNNNNNNNNMNNNN."
+    ],
+    // portal da saída (verde)
+    portal: [
+        "....................OOOOOOOO....................",
+        ".................OOOOQQQQQQOOOO.................",
+        "................OOQQQQSSSSQQQQOO................",
+        "..............OOOQQSSSUUUUSSSQQOOO..............",
+        ".............OOQQQSSSUUQQUUSSSQQQOO.............",
+        "............OOQQSSSUUQQSSQQUUSSSQQOO............",
+        "...........OOQQSSSSUQQSSSSQQUSSSSQQOO...........",
+        "..........OOQQSSSUUQQSSSSSSQQUUSSSQQOO..........",
+        ".........OOQQSSSUUQQSWWWWWWSQQUUSSSQQOO.........",
+        "........OOQQcSSSUQQSWWYYYYWWSQQUSSScQQOO........",
+        ".......OOQQcSSSSUQSWWYZSSZYWWSQUSSSScQQOO.......",
+        "......OOQQccSSSUQSSWZZSSSSZZWSSQUSSSccQQOO......",
+        "......OQQccSSUUUQSWZSSSSSSSSZWSQUUUSSccQQO......",
+        ".....OOQQcSSUQQSSSSSSSccccSSSSSSSQQUSScQQOO.....",
+        "....OOQQcSSUQSSScSSUUSSccSSUUSScSSSQUSScQQOO....",
+        "....OQQcSSUQSSScSSSUQSSSSSSQUSSScSSSQUSScQQO....",
+        "...OOQcSSUQSSSSSSSUQSSSSSSSSQUSSSSSSSQUSScQOO...",
+        "...OQQSSUUQSSSSSSUQSSSSSSSSSSQUSSSSSSQUUSSQQO...",
+        "...OQcSSUQSSScSSUQSSSSSSSSSSSSQUSScSSSQUSScQO...",
+        "..OOQcSSSQSSScSUUQSSSQQQQQQSSSQUUScSSSQSSScQOO..",
+        "..OQQcSSUQSSccSUQSSSQSSSSSSQSSSQUSccSSQUSScQQO..",
+        "..OQSSSUQQSScSSUQSSQQSSSSSSQQSSQUSScSSQQUSSSQO..",
+        "..OQSSSUQSSScSSUQSSQSSSSSSSSQSSQUSScSSSQUSSSQO..",
+        ".OOQSSSSQSSScSSSQSSSSYYSSYYSSSSQSSScSSSQSSSSQOO.",
+        ".OQQSSSUQSSSSSSSQSSYWYSSSSYWYSSQSSSSSSSQUSSSQQO.",
+        ".OQcSSUUQSSSSSSSSSYWSSSSSSSSWYSSSSSSSSSQUUSScQO.",
+        ".OQSSSUQScSSSSSSSSWSSSSSSSSSSWSSSSSSSScSQUSSSQO.",
+        ".OQSSSUQScSSSSSSSWYSSUU00UUSSYWSSSSSSScSQUSSSQO.",
+        ".OQSSSUQccSSSQQSSSSSU0SSSS0USSSSSQQSSSccQUSSSQO.",
+        ".OQSSSUQcSSWSQSSSSSU0SSSSSS0USSSSSQSWSScQUSSSQO.",
+        ".OQSSSSQcSWSSQSSSSU0SSSScSSS0USSSSQSSWScQSSSSQO.",
+        "OQQcSSSUQSYSQQSSSSU0SSSSScSS0USSSSQQSYSQUSSScQQO",
+        "OQccSSSSQSWSQSSSSSS0SSSSSSSS0SSSSSSQSWSQSSSSccQO",
+        "OQccSSSSQSWSQSSSSSS0SSSSSSSS0SSSSSSQSWSQSSSSccQO",
+        "OQQcSSSUQSYSQQSSSSU0SSSSSSSS0USSSSQQSYSQUSSScQQO",
+        ".OQSSSSQcSWSSQSSSSU0SSSSSSSS0USSSSQSSWScQSSSSQO.",
+        ".OQSSSUQcSSWSQSSSSSU0SSSSSS0USSSSSQSWSScQUSSSQO.",
+        ".OQSSSUQccSSSQQSSSSSU0SSSS0USSSSSQQSSSccQUSSSQO.",
+        ".OQSSSUQScSSSSSSSWYSSUU00UUSSYWSSSSSSScSQUSSSQO.",
+        ".OQSSSUQScSSSSSSSSWSSSSSSSSSSWSSSSSSSScSQUSSSQO.",
+        ".OQcSSUUQSSSSSSSSSYWSSSSSSSSWYSSSSSSSSSQUUSScQO.",
+        ".OQQSSSUQSSSSSSSQSSYWYSSSSYWYSSQSSSSSSSQUSSSQQO.",
+        ".OOQSSSSQSSScSSSQSSSSYYSSYYSSSSQSSScSSSQSSSSQOO.",
+        "..OQSSSUQSSScSSUQSSQSSSSSSSSQSSQUSScSSSQUSSSQO..",
+        "..OQSSSUQQSScSSUQSSQQSSSSSSQQSSQUSScSSQQUSSSQO..",
+        "..OQQcSSUQSSccSUQSSSQSSSSSSQSSSQUSccSSQUSScQQO..",
+        "..OOQcSSSQSSScSUUQSSSQQQQQQSSSQUUScSSSQSSScQOO..",
+        "...OQcSSUQSSScSSUQSSSSSSSSSSSSQUSScSSSQUSScQO...",
+        "...OQQSSUUQSSSSSSUQSSSSSSSSSSQUSSSSSSQUUSSQQO...",
+        "...OOQcSSUQSSSSSSSUQSSSSSSSSQUSSSSSSSQUSScQOO...",
+        "....OQQcSSUQSSScSSSUQSSSSSSQUSSScSSSQUSScQQO....",
+        "....OOQQcSSUQSSScSSUUSSccSSUUSScSSSQUSScQQOO....",
+        ".....OOQQcSSUQQSSSSSSSccccSSSSSSSQQUSScQQOO.....",
+        "......OQQccSSUUUQSWZSSSSSSSSZWSQUUUSSccQQO......",
+        "......OOQQccSSSUQSSWZZSSSSZZWSSQUSSSccQQOO......",
+        ".......OOQQcSSSSUQSWWYZSSZYWWSQUSSSScQQOO.......",
+        "........OOQQcSSSUQQSWWYYYYWWSQQUSSScQQOO........",
+        ".........OOQQSSSUUQQSWWYYWWSQQUUSSSQQOO.........",
+        "..........OOQQSSSUUQQSSSSSSQQUUSSSQQOO..........",
+        "...........OOQQSSSSUQQSSSSQQUSSSSQQOO...........",
+        "............OOQQSSSUUQQSSQQUUSSSQQOO............",
+        ".............OOQQQSSSUUQQUUSSSQQQOO.............",
+        "..............OOOQQSSSUUUUSSSQQOOO..............",
+        "................OOQQQQSSSSQQQQOO................",
+        ".................OOOOQQQQQQOOOO.................",
+        "....................OOOOOOOO...................."
+    ],
+    // portal da saída dourado (quando já pegou tudo)
+    portal_ouro: [
+        "....................PPPPPPPP....................",
+        ".................PPPPRRRRRRPPPP.................",
+        "................PPRRRRTTTTRRRRPP................",
+        "..............PPPRRTTTVVVVTTTRRPPP..............",
+        ".............PPRRRTTTVVRRVVTTTRRRPP.............",
+        "............PPRRTTTVVRRTTRRVVTTTRRPP............",
+        "...........PPRRTTTTVRRTTTTRRVTTTTRRPP...........",
+        "..........PPRRTTTVVRRTTTTTTRRVVTTTRRPP..........",
+        ".........PPRRTTTVVRRTXXXXXXTRRVVTTTRRPP.........",
+        "........PPRRcTTTVRRTXXXXXXXXTRRVTTTcRRPP........",
+        ".......PPRRcTTTTVRTXXXXTTXXXXTRVTTTTcRRPP.......",
+        "......PPRRccTTTVRTTXXXTTTTXXXTTRVTTTccRRPP......",
+        "......PRRccTTVVVRTXXTTTTTTTTXXTRVVVTTccRRP......",
+        ".....PPRRcTTVRRTTTTTTTccccTTTTTTTRRVTTcRRPP.....",
+        "....PPRRcTTVRTTTcTTVVTTccTTVVTTcTTTRVTTcRRPP....",
+        "....PRRcTTVRTTTcTTTVRTTTTTTRVTTTcTTTRVTTcRRP....",
+        "...PPRcTTVRTTTTTTTVRTTTTTTTTRVTTTTTTTRVTTcRPP...",
+        "...PRRTTVVRTTTTTTVRTTTTTTTTTTRVTTTTTTRVVTTRRP...",
+        "...PRcTTVRTTTcTTVRTTTTTTTTTTTTRVTTcTTTRVTTcRP...",
+        "..PPRcTTTRTTTcTVVRTTTRRRRRRTTTRVVTcTTTRTTTcRPP..",
+        "..PRRcTTVRTTccTVRTTTRTTTTTTRTTTRVTccTTRVTTcRRP..",
+        "..PRTTTVRRTTcTTVRTTRRTTTTTTRRTTRVTTcTTRRVTTTRP..",
+        "..PRTTTVRTTTcTTVRTTRTTTTTTTTRTTRVTTcTTTRVTTTRP..",
+        ".PPRTTTTRTTTcTTTRTTTTXXTTXXTTTTRTTTcTTTRTTTTRPP.",
+        ".PRRTTTVRTTTTTTTRTTXXXTTTTXXXTTRTTTTTTTRVTTTRRP.",
+        ".PRcTTVVRTTTTTTTTTXXTTTTTTTTXXTTTTTTTTTRVVTTcRP.",
+        ".PRTTTVRTcTTTTTTTTXTTTTTTTTTTXTTTTTTTTcTRVTTTRP.",
+        ".PRTTTVRTcTTTTTTTXXTTVVRRVVTTXXTTTTTTTcTRVTTTRP.",
+        ".PRTTTVRccTTTRRTTTTTVRTTTTRVTTTTTRRTTTccRVTTTRP.",
+        ".PRTTTVRcTTXTRTTTTTVRTTTTTTRVTTTTTRTXTTcRVTTTRP.",
+        ".PRTTTTRcTXTTRTTTTVRTTTTcTTTRVTTTTRTTXTcRTTTTRP.",
+        "PRRcTTTVRTXTRRTTTTVRTTTTTcTTRVTTTTRRTXTRVTTTcRRP",
+        "PRccTTTTRTXTRTTTTTTRTTTTTTTTRTTTTTTRTXTRTTTTccRP",
+        "PRccTTTTRTXTRTTTTTTRTTTTTTTTRTTTTTTRTXTRTTTTccRP",
+        "PRRcTTTVRTXTRRTTTTVRTTTTTTTTRVTTTTRRTXTRVTTTcRRP",
+        ".PRTTTTRcTXTTRTTTTVRTTTTTTTTRVTTTTRTTXTcRTTTTRP.",
+        ".PRTTTVRcTTXTRTTTTTVRTTTTTTRVTTTTTRTXTTcRVTTTRP.",
+        ".PRTTTVRccTTTRRTTTTTVRTTTTRVTTTTTRRTTTccRVTTTRP.",
+        ".PRTTTVRTcTTTTTTTXXTTVVRRVVTTXXTTTTTTTcTRVTTTRP.",
+        ".PRTTTVRTcTTTTTTTTXTTTTTTTTTTXTTTTTTTTcTRVTTTRP.",
+        ".PRcTTVVRTTTTTTTTTXXTTTTTTTTXXTTTTTTTTTRVVTTcRP.",
+        ".PRRTTTVRTTTTTTTRTTXXXTTTTXXXTTRTTTTTTTRVTTTRRP.",
+        ".PPRTTTTRTTTcTTTRTTTTXXTTXXTTTTRTTTcTTTRTTTTRPP.",
+        "..PRTTTVRTTTcTTVRTTRTTTTTTTTRTTRVTTcTTTRVTTTRP..",
+        "..PRTTTVRRTTcTTVRTTRRTTTTTTRRTTRVTTcTTRRVTTTRP..",
+        "..PRRcTTVRTTccTVRTTTRTTTTTTRTTTRVTccTTRVTTcRRP..",
+        "..PPRcTTTRTTTcTVVRTTTRRRRRRTTTRVVTcTTTRTTTcRPP..",
+        "...PRcTTVRTTTcTTVRTTTTTTTTTTTTRVTTcTTTRVTTcRP...",
+        "...PRRTTVVRTTTTTTVRTTTTTTTTTTRVTTTTTTRVVTTRRP...",
+        "...PPRcTTVRTTTTTTTVRTTTTTTTTRVTTTTTTTRVTTcRPP...",
+        "....PRRcTTVRTTTcTTTVRTTTTTTRVTTTcTTTRVTTcRRP....",
+        "....PPRRcTTVRTTTcTTVVTTccTTVVTTcTTTRVTTcRRPP....",
+        ".....PPRRcTTVRRTTTTTTTccccTTTTTTTRRVTTcRRPP.....",
+        "......PRRccTTVVVRTXXTTTTTTTTXXTRVVVTTccRRP......",
+        "......PPRRccTTTVRTTXXXTTTTXXXTTRVTTTccRRPP......",
+        ".......PPRRcTTTTVRTXXXXTTXXXXTRVTTTTcRRPP.......",
+        "........PPRRcTTTVRRTXXXXXXXXTRRVTTTcRRPP........",
+        ".........PPRRTTTVVRRTXXXXXXTRRVVTTTRRPP.........",
+        "..........PPRRTTTVVRRTTTTTTRRVVTTTRRPP..........",
+        "...........PPRRTTTTVRRTTTTRRVTTTTRRPP...........",
+        "............PPRRTTTVVRRTTRRVVTTTRRPP............",
+        ".............PPRRRTTTVVRRVVTTTRRRPP.............",
+        "..............PPPRRTTTVVVVTTTRRPPP..............",
+        "................PPRRRRTTTTRRRRPP................",
+        ".................PPPPRRRRRRPPPP.................",
+        "....................PPPPPPPP...................."
+    ],
+    // mosca com as asas fechadas
+    mosca0: [
+        "......hdh......",
+        ".....hhdhh.....",
+        "...d.ddddd.d...",
+        "....dkkdkkd....",
+        "....klldllk....",
+        "...klcldlllk...",
+        "..klclkdklllk..",
+        "..kllkdddkllk..",
+        "...kkdddddkk...",
+        "....d.ddd.d...."
+    ],
+    // mosca com as asas abertas
+    mosca1: [
+        "......hdh......",
+        "..d..hhdhh..d..",
+        "...d.ddddd.d...",
+        "..kkkkkdkkkkk..",
+        ".kllllkdkllllk.",
+        "kllcllkdklllllk",
+        "klcllkkdkkllllk",
+        ".kkkkkdddkkkkk.",
+        ".....ddddd.....",
+        "....d.ddd.d...."
+    ],
+    // moeda de frente
+    moeda0: [
+        "..mmmm..",
+        ".mffffm.",
+        "mffcfffm",
+        "mfcffffm",
+        "mffffffm",
+        "mfffffmm",
+        ".mffffm.",
+        "..mmmm.."
+    ],
+    // moeda de lado
+    moeda1: [
+        "fmf",
+        "fmf",
+        "cmf",
+        "fmf",
+        "fmf",
+        "fmf",
+        "fmf",
+        "fmf"
+    ],
+    // bloco da parede (obstáculo)
+    parede: [
+        "iiiiiiiiiii",
+        "innnnnnnnni",
+        "ininnnnooni",
+        "iniinnnnoni",
+        "innniiinnni",
+        "inoniiiinni",
+        "inoonnnnini",
+        "innnnnonnni",
+        "innnnnnnnni",
+        "iiiiiiiiiii"
+    ]
+};
+
+// ---------- PREPARAÇÃO ----------
+// Para desenhar rápido, cada linha de pixels da mesma cor vira UM retângulo
+// (em vez de um retângulo por pixel). Isso é feito uma vez, ao abrir o jogo.
+const SPRITES_PRONTOS = {};
+
+for (const nome in IMAGENS) {
+    const linhas = IMAGENS[nome];
+    const retangulos = []; // cada um: [x, y, largura, cor]
+
+    linhas.forEach((linha, y) => {
+        let x = 0;
+        while (x < linha.length) {
+            const letra = linha[x];
+            if (letra === ".") { x++; continue; }
+
+            let fim = x;
+            while (fim + 1 < linha.length && linha[fim + 1] === letra) fim++;
+
+            retangulos.push([x, y, fim - x + 1, CORES_IMG[letra]]);
+            x = fim + 1;
+        }
+    });
+
+    SPRITES_PRONTOS[nome] = {
+        largura: linhas[0].length,
+        altura: linhas.length,
+        retangulos
+    };
+}

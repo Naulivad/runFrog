@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+    <title>Fuga da Cobra</title>
+
+    <!-- Fonte pixelada (precisa de internet; sem ela o jogo usa Courier New) -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Os scripts precisam ficar NESTA ordem (um usa as coisas do anterior) -->
+    <script src="js/variaveis.js" defer></script> <!-- variáveis globais -->
+    <script src="js/sprites.js" defer></script>   <!-- desenhos de pixel art -->
+    <script src="js/ana.js" defer></script>       <!-- gerador de fases -->
+    <script src="js/luan.js" defer></script>      <!-- regras do jogo -->
+    <script src="js/douglas.js" defer></script>   <!-- controles -->
+    <script src="js/heitor.js" defer></script>    <!-- ranking e telas -->
+    <script src="js/main.js" defer></script>      <!-- desenho e loop principal -->
+</head>
+
+<body>
+    <div id="app">
+
+        <!-- Barra de informações no topo -->
+        <div id="hud">
+            <span>Fase <b id="hud-fase">1</b>/10</span>
+            <span>Pontos <b id="hud-pontos">0</b></span>
+            <span>Itens <b id="hud-itens">0/0</b></span>
+            <span>💀 Mortes <b id="hud-mortes">0</b></span>
+            <span>☠ Ácido <b id="hud-acido">0%</b></span>
+            <span id="btn-reiniciar">↻ Reiniciar <b>(R)</b></span>
+        </div>
+
+        <div id="area-jogo">
+
+            <!-- Onde o jogo é desenhado -->
+            <canvas id="canvas"></canvas>
+
+            <!-- Janela por cima do jogo (menu, ranking, fase completa) -->
+            <div id="sobreposicao">
+                <h1 id="titulo"></h1>
+                <p id="mensagem"></p>
+
+                <input id="campo-apelido" maxlength="12" placeholder="Seu nick" autocomplete="off">
+
+                <div id="lista-ranking"></div>
+
+                <button id="botao-principal"></button>
+                <button id="botao-secundario" class="alt"></button>
+            </div>
+
+        </div>
+
+        <div id="dica">
+            Moedas 10 · Moscas 50 · Tudo = +100 ·
+            O ÁCIDO SOBE: corra! · R = reiniciar
+        </div>
+
+    </div>
+</body>
+
+</html>
