@@ -1,15 +1,4 @@
-// =====================================================================
-// ana.js
-// Gera cada fase.
-//
-// Ideia principal: primeiro sorteamos um CAMINHO possível (uma sequência
-// de deslizes). Moedas e moscas são colocadas nesse caminho, então SEMPRE
-// dá para pegar tudo. Os ossos (que matam) vão em células fora do caminho.
-// =====================================================================
 
-// ---------- ALEATÓRIO COM SEMENTE ----------
-// Com a mesma semente, sai sempre a mesma sequência de números.
-// Por isso a fase 3 é igual toda vez que você joga.
 function criarAleatorio(semente) {
     return function () {
         semente |= 0;
@@ -18,16 +7,13 @@ function criarAleatorio(semente) {
         let mistura = Math.imul(semente ^ semente >>> 15, 1 | semente);
         mistura = mistura + Math.imul(mistura ^ mistura >>> 7, 61 | mistura) ^ mistura;
 
-        return ((mistura ^ mistura >>> 14) >>> 0) / 4294967296; // número entre 0 e 1
+        return ((mistura ^ mistura >>> 14) >>> 0) / 4294967296; 
     };
 }
 
-// ---------- AJUDANTES DO MAPA ----------
 
-// Converte (x, y) no número da célula.
 const indice = (x, y) => y * tamanho + x;
 
-// Vale true se a célula é parede ou está fora do mapa.
 function ehParede(x, y) {
     return (
         x < 0 || y < 0 ||
@@ -36,16 +22,16 @@ function ehParede(x, y) {
     );
 }
 
-// ---------- GERADOR DA FASE ----------
+
 function gerarFase(lv) {
 
-    tamanho = Math.min(14, 7 + Math.ceil(lv * 0.75)); // mapas maiores nas fases altas
-    let passosAlvo = 4 + Math.round(lv * 1.1);        // quantos deslizes o caminho terá
+    tamanho = Math.min(14, 7 + Math.ceil(lv * 0.75)); 
+    let passosAlvo = 4 + Math.round(lv * 1.1);        
 
-    // Tenta várias vezes até sair um mapa bom
+  
     for (let tentativa = 0; tentativa < 800; tentativa++) {
 
-        // Se está difícil achar mapa, pede caminhos um pouco mais curtos
+      
         if (tentativa && tentativa % 120 === 0) {
             passosAlvo = Math.max(3, passosAlvo - 1);
         }
@@ -57,26 +43,26 @@ function gerarFase(lv) {
         moedas = new Set();
         moscas = new Set();
 
-        // 1) Espalha paredes (mais paredes nas fases altas)
+  
         const densidade = 0.12 + lv * 0.012;
         for (let i = 0; i < tamanho * tamanho; i++) {
             if (sorteio() < densidade) paredes.add(i);
         }
 
-        // 2) Sorteia onde o sapo começa
+        
         inicio = sortearInicio(sorteio);
         if (!inicio) continue;
 
-        // 3) Sorteia um caminho que termina numa célula nova (será o portal)
+       
         const caminho = sortearCaminho(sorteio, passosAlvo);
         if (!caminho) continue;
 
-        // 4) Calcula a velocidade do ácido; se for impossível, tenta outro mapa
+        
         const velocidade = calcularVelocidadeAcido(lv, tentativa, caminho.tempoDeChegada);
         if (velocidade === null) continue;
         velocidadeAcido = velocidade;
 
-        // 5) Coloca portal, moscas, moedas e ossos
+        
         saida = caminho.paradas[caminho.paradas.length - 1];
         posicionarMoscasEMoedas(sorteio, lv, caminho);
         posicionarOssos(sorteio, lv, caminho);
@@ -87,8 +73,7 @@ function gerarFase(lv) {
     }
 }
 
-// Procura uma célula livre (sem parede) para o sapo começar.
-// Devolve { x, y } ou null se não achou.
+
 function sortearInicio(sorteio) {
     let x, y;
     let tentativas = 0;
@@ -102,12 +87,7 @@ function sortearInicio(sorteio) {
     return paredes.has(indice(x, y)) ? null : { x, y };
 }
 
-// Sorteia uma sequência de deslizes a partir do início.
-// Devolve:
-//   paradas          - lugares onde o sapo para entre um deslize e outro
-//   visitadas        - todas as células por onde o caminho passa
-//   tempoDeChegada   - em quantos segundos (aprox.) o jogador chega em cada célula
-// Devolve null se não conseguiu fazer um caminho bom.
+
 function sortearCaminho(sorteio, passosAlvo) {
 
     let atual = { x: inicio.x, y: inicio.y };
@@ -117,13 +97,13 @@ function sortearCaminho(sorteio, passosAlvo) {
 
     for (let passo = 0; passo < passosAlvo + 10; passo++) {
 
-        // Vê para onde dá para deslizar (as 4 direções) a partir daqui
+        
         const opcoes = [];
 
         for (const d of Object.values(DIRECOES)) {
             let x = atual.x;
             let y = atual.y;
-            let novas = 0;           // quantas células ainda não visitadas esse deslize cobre
+            let novas = 0;         
             const celulas = [];
 
             while (!ehParede(x + d[0], y + d[1])) {
@@ -136,19 +116,19 @@ function sortearCaminho(sorteio, passosAlvo) {
             if (celulas.length) opcoes.push({ x, y, celulas, novas });
         }
 
-        if (!opcoes.length) return null; // sapo preso, caminho ruim
+        if (!opcoes.length) return null; 
 
-        // Prefere deslizes que passam por células novas
+        
         const comNovas = opcoes.filter(o => o.novas > 0);
         const lista = comNovas.length ? comNovas : opcoes;
         const escolhida = lista[sorteio() * lista.length | 0];
 
-        // Chegou ao número de passos e parou numa célula nova? Então acabou.
+        
         const terminou =
             passo + 1 >= passosAlvo &&
             !visitadas.has(indice(escolhida.x, escolhida.y));
 
-        // Anota quando o jogador chega em cada célula (0,85 s por deslize + 0,03 s por célula)
+       
         escolhida.celulas.forEach((celula, j) => {
             if (!tempoDeChegada.has(celula)) {
                 tempoDeChegada.set(celula, passo * 0.85 + (j + 1) * 0.03);
@@ -166,13 +146,10 @@ function sortearCaminho(sorteio, passosAlvo) {
     return null;
 }
 
-// O ácido não pode ser rápido demais, senão o caminho fica impossível.
-// Aqui calculamos a velocidade máxima que ainda deixa o jogador chegar
-// em todas as células do caminho antes do ácido.
-// Devolve a velocidade, ou null se esse mapa não serve.
+
 function calcularVelocidadeAcido(lv, tentativa, tempoDeChegada) {
 
-    const desejada = 0.14 + lv * 0.03; // quanto mais alta a fase, mais rápido
+    const desejada = 0.14 + lv * 0.03; 
     let maxima = 9;
 
     for (const [celula, segundos] of tempoDeChegada) {
@@ -183,20 +160,18 @@ function calcularVelocidadeAcido(lv, tentativa, tempoDeChegada) {
         }
     }
 
-    // Quanto mais tentativas falham, mais aceitamos um ácido lento
+
     const minimoAceito = desejada * Math.max(0, 0.75 - tentativa * 0.00108);
     if (maxima < minimoAceito) return null;
 
     return Math.max(0.04, Math.min(desejada, maxima));
 }
 
-// Coloca as moscas (valem mais) e as moedas ao longo do caminho.
 function posicionarMoscasEMoedas(sorteio, lv, caminho) {
 
     const indiceSaida = indice(saida.x, saida.y);
     const indiceInicio = indice(inicio.x, inicio.y);
 
-    // Moscas ficam em lugares onde o sapo PARA (exceto início e saída)
     const meios = [...new Set(caminho.paradas.map(p => indice(p.x, p.y)))]
         .filter(c => c !== indiceSaida && c !== indiceInicio);
 
@@ -207,7 +182,7 @@ function posicionarMoscasEMoedas(sorteio, lv, caminho) {
         moscas.add(meios.splice(posicao, 1)[0]);
     }
 
-    // Moedas ficam em todo o resto do caminho
+
     for (const celula of caminho.visitadas) {
         if (celula !== indiceSaida && celula !== indiceInicio && !moscas.has(celula)) {
             moedas.add(celula);
@@ -215,16 +190,15 @@ function posicionarMoscasEMoedas(sorteio, lv, caminho) {
     }
 }
 
-// Coloca ossos em células fora do caminho (assim o caminho perfeito continua livre).
 function posicionarOssos(sorteio, lv, caminho) {
 
-    // Células livres: sem parede e fora do caminho
+
     const livres = [];
     for (let celula = 0; celula < tamanho * tamanho; celula++) {
         if (!paredes.has(celula) && !caminho.visitadas.has(celula)) livres.push(celula);
     }
 
-    // Ossos "perigosos": na mesma linha ou coluna de uma parada do sapo
+
     const alinhadas = livres.filter(celula =>
         caminho.paradas.some(p =>
             p.x === celula % tamanho || p.y === (celula / tamanho | 0)
@@ -240,9 +214,7 @@ function posicionarOssos(sorteio, lv, caminho) {
     }
 }
 
-// ---------- TAMANHO NA TELA ----------
 
-// Calcula o tamanho das células para o mapa caber na janela.
 function ajustarTamanho() {
     const lado = Math.min(innerWidth - 12, innerHeight - 120, 940);
 
@@ -252,7 +224,7 @@ function ajustarTamanho() {
     canvas.height = tamCelula * tamanho;
 }
 
-// ---------- CARREGAR UMA FASE ----------
+
 function carregarFase() {
 
     gerarFase(fase);
@@ -260,10 +232,9 @@ function carregarFase() {
 
     tempoInicioFase = tempo;
 
-    // x,y = posição real; px,py = posição desenhada (vai deslizando até x,y)
     sapo = { x: inicio.x, y: inicio.y, px: inicio.x, py: inicio.y };
 
-    // Guarda os pontos de agora: se o sapo morrer, volta para estes valores
+
     salvo = { pontos, moedasPegas, moscasPegas };
 
     tempoAcido = 0;

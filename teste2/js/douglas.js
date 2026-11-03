@@ -1,8 +1,3 @@
-// =====================================================================
-// douglas.js
-// Controles: teclado, toque (arrastar o dedo) e redimensionar a janela.
-// =====================================================================
-
 // Começa um deslize na direção pedida ("cima", "baixo", "esquerda", "direita").
 function mover(direcao) {
 
