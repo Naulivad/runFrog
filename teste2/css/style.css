@@ -1,20 +1,14 @@
-/* =====================================================================
-   style.css - aparência da página (barra do topo, telas, botões)
-   O desenho do jogo em si é feito no canvas (js/main.js).
-   ===================================================================== */
-
-/* ---------- CORES DO TEMA ---------- */
 :root {
-    --bg: #2a0508;      /* fundo da página */
-    --panel: #3a0f16;   /* fundo dos quadros e botões */
-    --text: #eaf7d9;    /* texto */
-    --acid: #9dff6a;    /* verde do ácido (títulos e botão) */
-    --gold: #ffd23f;    /* dourado (números do HUD) */
-    --flesh: #c9657f;   /* rosa da carne (bordas) */
-    --muted: #e0a8a8;   /* texto mais discreto */
+    --bg: #2a0508;     
+    --panel: #3a0f16;   
+    --text: #eaf7d9;   
+    --acid: #9dff6a;    
+    --gold: #ffd23f;    
+    --flesh: #c9657f;  
+    --muted: #e0a8a8;   
 
     box-sizing: border-box;
-    padding-top: env(safe-area-inset-top, 0px);       /* respeita o "notch" do celular */
+    padding-top: env(safe-area-inset-top, 0px);       
     padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
@@ -22,7 +16,7 @@
     box-sizing: border-box;
 }
 
-/* ---------- PÁGINA ---------- */
+
 html,
 body {
     margin: 0;
@@ -31,10 +25,10 @@ body {
     color: var(--text);
     font-family: "Press Start 2P", "Courier New", monospace;
     overflow: hidden;
-    touch-action: none; /* impede o celular de dar zoom/rolar ao arrastar */
+    touch-action: none; 
 }
 
-/* Bolinhas de fundo que descem devagar */
+
 body {
     background-image: radial-gradient(#4d1019 1px, transparent 1px);
     background-size: 6px 6px;
@@ -45,7 +39,6 @@ body {
     to { background-position: 0 6px; }
 }
 
-/* Caixa que centraliza tudo (HUD + jogo + dica) */
 #app {
     position: relative;
     z-index: 1;
@@ -58,7 +51,7 @@ body {
     padding: 8px;
 }
 
-/* ---------- BARRA DO TOPO (HUD) ---------- */
+
 #hud {
     display: flex;
     gap: 8px;
@@ -82,7 +75,7 @@ body {
     cursor: pointer;
 }
 
-/* ---------- ÁREA DO JOGO ---------- */
+
 #area-jogo {
     position: relative;
 }
@@ -92,11 +85,11 @@ canvas {
     border: 4px solid var(--flesh);
     outline: 4px solid #4f1330;
     display: block;
-    image-rendering: pixelated; /* pixels nítidos ao ampliar */
+    image-rendering: pixelated; 
     box-shadow: 0 0 40px #9dff6a33;
 }
 
-/* ---------- JANELA POR CIMA DO JOGO ---------- */
+
 #sobreposicao {
     position: absolute;
     inset: 0;
@@ -138,7 +131,7 @@ canvas {
     outline: none;
 }
 
-/* ---------- BOTÕES ---------- */
+
 button {
     background: var(--acid);
     color: #10260f;
@@ -155,13 +148,13 @@ button.alt {
     border-color: var(--flesh);
 }
 
-/* Efeito de "apertar" o botão */
+
 button:active {
     transform: translate(3px, 3px);
     box-shadow: 1px 1px 0 #4f1330;
 }
 
-/* ---------- RANKING ---------- */
+
 #lista-ranking {
     width: 100%;
     max-width: 340px;
@@ -173,7 +166,7 @@ button:active {
 
 .row {
     display: grid;
-    grid-template-columns: 30px 1fr auto auto; /* posição | nome | pontos | mortes */
+    grid-template-columns: 30px 1fr auto auto; 
     gap: 6px;
     background: var(--panel);
     padding: 6px 8px;
@@ -182,7 +175,7 @@ button:active {
 }
 
 .row.me {
-    outline: 2px solid var(--gold); /* destaca a sua linha */
+    outline: 2px solid var(--gold); 
 }
 
 .top {
@@ -197,7 +190,7 @@ button:active {
     margin-top: 4px;
 }
 
-/* ---------- DICA EMBAIXO ---------- */
+
 #dica {
     color: var(--muted);
     font-size: 8px;
@@ -205,7 +198,6 @@ button:active {
     line-height: 1.6;
 }
 
-/* Esconde qualquer elemento com esta classe */
 .hidden {
     display: none !important;
 }

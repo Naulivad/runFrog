@@ -1,10 +1,4 @@
-// =====================================================================
-// luan.js
-// Regras do jogo: o que acontece a cada passo do sapo (pegar moeda,
-// bater na parede, morrer, vencer) e o ácido.
-// =====================================================================
-
-// ---------- HUD (a barra de informações no topo) ----------
+// ---------- HUD ----------
 function atualizarHud() {
     porId("hud-fase").textContent = fase;
     porId("hud-pontos").textContent = pontos;
@@ -17,17 +11,15 @@ function atualizarHud() {
 
 // ---------- ÁCIDO ----------
 
-// Quantas linhas o ácido já cobriu (zero ou negativo = ainda não apareceu).
 function nivelDoAcido() {
     return velocidadeAcido * tempoAcido - ATRASO_ACIDO;
 }
 
-// Linha onde fica a superfície do ácido (diminui conforme ele sobe).
 function superficieDoAcido() {
     return tamanho - nivelDoAcido();
 }
 
-// Mostra no HUD a % do mapa coberta pelo ácido (só escreve quando muda).
+// % 
 function atualizarHudAcido() {
     const pct = Math.max(0, Math.min(100, Math.round(nivelDoAcido() / tamanho * 100)));
 
@@ -44,7 +36,7 @@ function definirRosto(nome, duracao) {
     tempoRosto = duracao;
 }
 
-// Solta "quantidade" quadradinhos que voam para todos os lados.
+
 function explosao(x, y, cor, quantidade, velocidade, gravidade) {
     for (let i = 0; i < quantidade; i++) {
         const angulo = Math.random() * 6.283;
@@ -55,14 +47,14 @@ function explosao(x, y, cor, quantidade, velocidade, gravidade) {
             y: y + 0.5,
             vx: Math.cos(angulo) * forca,
             vy: Math.sin(angulo) * forca,
-            vida: 0.5 + Math.random() * 0.5, // segundos até sumir
+            vida: 0.5 + Math.random() * 0.5, 
             cor,
             gravidade: gravidade || 0
         });
     }
 }
 
-// Cria um quadrado que cresce e some (efeito de onda).
+
 function criarOnda(x, y, cor) {
     ondas.push({ x, y, raio: 0, vida: 1, cor });
 }
@@ -81,7 +73,6 @@ function criarTextoFlutuante(texto, cor, vida, deslocamentoY) {
 function reiniciarFase() {
     if (estado !== "jogando" && estado !== "morto") return;
 
-    // Volta os pontos para como estavam no começo da fase
     pontos = salvo.pontos;
     moedasPegas = salvo.moedasPegas;
     moscasPegas = salvo.moscasPegas;
@@ -97,7 +88,6 @@ porId("btn-reiniciar").onclick = () => reiniciarFase();
 
 // ---------- MORTE ----------
 
-// Parte comum a todas as mortes (espinhos ou ácido).
 function iniciarMorte() {
     estado = "morto";
     tempoMorto = 0;
@@ -105,8 +95,6 @@ function iniciarMorte() {
 
     mortes++;
 
-    // Perde pontos ao morrer (nunca fica abaixo de zero).
-    // A penalidade também vai para "salvo", senão ela sumiria quando a fase recomeça.
     const perdidos = Math.min(PENALIDADE_MORTE, pontos);
     pontos -= perdidos;
     salvo.pontos = Math.max(0, salvo.pontos - PENALIDADE_MORTE);
@@ -120,7 +108,7 @@ function iniciarMorte() {
 
 function morrerNosOssos() {
     iniciarMorte();
-    explosao(sapo.x, sapo.y, "#d62828", 34, 5.5, 9);
+    explosao(sapo.x, sapo.y, "#d62828", 500, 5.5, 9);
     explosao(sapo.x, sapo.y, VERDE_ACIDO, 14, 4, 9);
 }
 
@@ -131,25 +119,24 @@ function matarPeloAcido() {
 }
 
 // ---------- UM PASSO DO SAPO ----------
-// Chamada várias vezes por segundo enquanto o sapo desliza.
-// Cada chamada anda UMA célula na direção do deslize.
+
 function darPasso() {
     const d = direcaoSlide;
 
-    // Parede na frente: para de deslizar
+
     if (ehParede(sapo.x + d[0], sapo.y + d[1])) {
         direcaoSlide = null;
-        if (passosDados > 0) baterNaParede(d); // só "dói" se chegou a andar
+        if (passosDados > 0) baterNaParede(d); //só doi de anda mais de um kkkkkj
         return;
     }
 
-    // Anda uma célula (e deixa um rastro onde estava)
+    //rastroooo
     rastro.push({ x: sapo.x, y: sapo.y, vida: 1 });
     sapo.x += d[0];
     sapo.y += d[1];
     passosDados++;
 
-    // O que existe nessa nova célula?
+    //qq tem ai zé?
     const celula = indice(sapo.x, sapo.y);
 
     if (moedas.delete(celula)) pegarMoeda();
@@ -199,7 +186,8 @@ function chegarNoPortal() {
     definirRosto("win", 9);
     tremor = 6;
 
-    // Pegou tudo? Ganha bônus.
+
+    // uiui bônus hehehehehehehehehehehehehe
     const perfeito = !moedas.size && !moscas.size;
 
     if (perfeito) {
@@ -214,7 +202,7 @@ function chegarNoPortal() {
     const faltaram = moedas.size + moscas.size;
 
     if (fase >= TOTAL_FASES) {
-        // Última fase: salva a pontuação e mostra o ranking
+        
         estado = "fim";
 
         setTimeout(async () => {
@@ -223,7 +211,7 @@ function chegarNoPortal() {
         }, 900);
 
     } else {
-        // Espera 0,9 s (para ver a animação) e mostra a tela de fase completa
+        
         estado = "venceu";
 
         setTimeout(() => {

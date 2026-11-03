@@ -1,13 +1,3 @@
-// =====================================================================
-// sprites.js
-// Os desenhos do jogo (sapo, espinhos, portal, mosca, moeda e parede).
-// Foram tirados das imagens de pixel art que você mandou: cada letra é
-// um pixel, e o ponto "." é transparente. As cores ficam em CORES_IMG.
-//
-// Os desenhos com animação têm vários quadros (ex.: mosca com asas abertas
-// e fechadas) e o main.js troca de quadro para animar.
-// =====================================================================
-
 const CORES_IMG = {
     a: "#22b14c",
     b: "#299448",
@@ -46,7 +36,7 @@ const CORES_IMG = {
 };
 
 const IMAGENS = {
-    // sapo andando normal (também usado ao deslizar e ao pegar item)
+
     sapo_idle: [
         ".......................",
         ".......................",
@@ -66,7 +56,7 @@ const IMAGENS = {
         "......bbbbbbbbbbbba....",
         ".....bbbbbb...bbbbaa..."
     ],
-    // sapo batendo na parede (com estrelinhas)
+ 
     sapo_hit: [
         ".......................",
         "........f.......f.f....",
@@ -86,7 +76,7 @@ const IMAGENS = {
         "......bbbbbbbbbbbba....",
         ".....bbbbb....bbbbaa..."
     ],
-    // sapo passando de fase (olhos de estrela e brilhos)
+
     sapo_win: [
         "...................f...",
         "..................fff..",
@@ -106,7 +96,7 @@ const IMAGENS = {
         "......bbbbbbbbbbbba....",
         ".....bbbbbb...bbbbaa..."
     ],
-    // sapo morto (espinho ou ácido)
+
     sapo_dead: [
         ".......................",
         ".......................",
@@ -126,7 +116,7 @@ const IMAGENS = {
         "......bbbbbbbbbbbba....",
         ".....bbbbbb...bbbbaa..."
     ],
-    // três espinhos de metal (perigo: quem encosta morre)
+   
     espinhos: [
         "....H........H........H......",
         "....I........I........I......",
@@ -143,7 +133,7 @@ const IMAGENS = {
         "NHLMLIHNNINNNHMNLILNNHLMHNNN.",
         "NNNMNLNNNNNNNNMNNNNNNNNMNNNN."
     ],
-    // portal da saída (verde)
+ 
     portal: [
         "....................OOOOOOOO....................",
         ".................OOOOQQQQQQOOOO.................",
@@ -212,7 +202,7 @@ const IMAGENS = {
         ".................OOOOQQQQQQOOOO.................",
         "....................OOOOOOOO...................."
     ],
-    // portal da saída dourado (quando já pegou tudo)
+  
     portal_ouro: [
         "....................PPPPPPPP....................",
         ".................PPPPRRRRRRPPPP.................",
@@ -281,7 +271,7 @@ const IMAGENS = {
         ".................PPPPRRRRRRPPPP.................",
         "....................PPPPPPPP...................."
     ],
-    // mosca com as asas fechadas
+
     mosca0: [
         "......hdh......",
         ".....hhdhh.....",
@@ -294,7 +284,7 @@ const IMAGENS = {
         "...kkdddddkk...",
         "....d.ddd.d...."
     ],
-    // mosca com as asas abertas
+
     mosca1: [
         "......hdh......",
         "..d..hhdhh..d..",
@@ -307,7 +297,7 @@ const IMAGENS = {
         ".....ddddd.....",
         "....d.ddd.d...."
     ],
-    // moeda de frente
+
     moeda0: [
         "..mmmm..",
         ".mffffm.",
@@ -318,7 +308,7 @@ const IMAGENS = {
         ".mffffm.",
         "..mmmm.."
     ],
-    // moeda de lado
+
     moeda1: [
         "fmf",
         "fmf",
@@ -329,7 +319,7 @@ const IMAGENS = {
         "fmf",
         "fmf"
     ],
-    // bloco da parede (obstáculo)
+
     parede: [
         "iiiiiiiiiii",
         "innnnnnnnni",
@@ -344,14 +334,11 @@ const IMAGENS = {
     ]
 };
 
-// ---------- PREPARAÇÃO ----------
-// Para desenhar rápido, cada linha de pixels da mesma cor vira UM retângulo
-// (em vez de um retângulo por pixel). Isso é feito uma vez, ao abrir o jogo.
 const SPRITES_PRONTOS = {};
 
 for (const nome in IMAGENS) {
     const linhas = IMAGENS[nome];
-    const retangulos = []; // cada um: [x, y, largura, cor]
+    const retangulos = [];
 
     linhas.forEach((linha, y) => {
         let x = 0;
