@@ -583,3 +583,4 @@ atualizarHud();
 mostrarTelaInicial();
 
 requestAnimationFrame(loopDoJogo);
+

@@ -1,3 +1,4 @@
+
 // ---------- HUD ----------
 function atualizarHud() {
     porId("hud-fase").textContent = fase;
@@ -19,7 +20,7 @@ function superficieDoAcido() {
     return tamanho - nivelDoAcido();
 }
 
-// % 
+// %
 function atualizarHudAcido() {
     const pct = Math.max(0, Math.min(100, Math.round(nivelDoAcido() / tamanho * 100)));
 
@@ -36,7 +37,6 @@ function definirRosto(nome, duracao) {
     tempoRosto = duracao;
 }
 
-
 function explosao(x, y, cor, quantidade, velocidade, gravidade) {
     for (let i = 0; i < quantidade; i++) {
         const angulo = Math.random() * 6.283;
@@ -47,13 +47,12 @@ function explosao(x, y, cor, quantidade, velocidade, gravidade) {
             y: y + 0.5,
             vx: Math.cos(angulo) * forca,
             vy: Math.sin(angulo) * forca,
-            vida: 0.5 + Math.random() * 0.5, 
+            vida: 0.5 + Math.random() * 0.5,
             cor,
             gravidade: gravidade || 0
         });
     }
 }
-
 
 function criarOnda(x, y, cor) {
     ondas.push({ x, y, raio: 0, vida: 1, cor });
@@ -70,6 +69,7 @@ function criarTextoFlutuante(texto, cor, vida, deslocamentoY) {
 }
 
 // ---------- REINICIAR ----------
+
 function reiniciarFase() {
     if (estado !== "jogando" && estado !== "morto") return;
 
@@ -123,20 +123,19 @@ function matarPeloAcido() {
 function darPasso() {
     const d = direcaoSlide;
 
-
     if (ehParede(sapo.x + d[0], sapo.y + d[1])) {
         direcaoSlide = null;
-        if (passosDados > 0) baterNaParede(d); //só doi de anda mais de um kkkkkj
+        if (passosDados > 0) baterNaParede(d);
         return;
     }
 
-    //rastroooo
+    // Rastro
     rastro.push({ x: sapo.x, y: sapo.y, vida: 1 });
     sapo.x += d[0];
     sapo.y += d[1];
     passosDados++;
 
-    //qq tem ai zé?
+    // Itens da posição
     const celula = indice(sapo.x, sapo.y);
 
     if (moedas.delete(celula)) pegarMoeda();
@@ -186,8 +185,7 @@ function chegarNoPortal() {
     definirRosto("win", 9);
     tremor = 6;
 
-
-    // uiui bônus hehehehehehehehehehehehehe
+    // Bônus
     const perfeito = !moedas.size && !moscas.size;
 
     if (perfeito) {
@@ -202,16 +200,26 @@ function chegarNoPortal() {
     const faltaram = moedas.size + moscas.size;
 
     if (fase >= TOTAL_FASES) {
-        
+
         estado = "fim";
 
         setTimeout(async () => {
             await salvarPontuacao();
-            mostrarTelaRanking(true);
+
+            mostrarTela(
+                "Você escapou!",
+                "Você conseguiu fugir da cobra! " +
+                "Fez <b>" + pontos + "</b> pontos com " +
+                "<b>" + mortes + "</b> mortes.",
+                {
+                    botao: "JOGAR DE NOVO",
+                    acao: comecarJogo
+                }
+            );
         }, 900);
 
     } else {
-        
+
         estado = "venceu";
 
         setTimeout(() => {
